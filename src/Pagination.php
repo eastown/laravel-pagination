@@ -89,7 +89,7 @@ class Pagination
             is_string($group) and $group = new Group(...[$group]);
             $group->build($this->builder);
         }
-        $this->makeGroupCountBuilder($groups);
+        $groups and $this->makeGroupCountBuilder($groups);
         return $this;
     }
 
@@ -103,6 +103,9 @@ class Pagination
 
     public function sum(array $fields)
     {
+        if(!$fields) {
+            return [];
+        }
         $raw = $this->raw(join(',', array_map(function($field){
             return "SUM({$field}) AS {$field}";
         }, $fields)));

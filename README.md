@@ -108,9 +108,9 @@ $info = $pagination->paginate(function($user){
             ]
           ),
           new Condition('group', \Eastown\Pagination\Operator::DOES_NOT_HAVE, 
-              [
-                  new Condition('name', \Eastown\Pagination\Operator::EQ, 'test_group2')
-              ]
+            [
+              new Condition('name', \Eastown\Pagination\Operator::EQ, 'test_group2')
+            ]
           )
       ])
       ->paginate();
@@ -151,7 +151,7 @@ Simple way
 (new Eastown\Pagination\Pagination(new \App\User()))->conditions(...)->total();
 
 // Output exp
-100
+// 100
 
 ```
 
@@ -167,4 +167,61 @@ Simple way
 
 ```
 
+## Work with Request
 
+```php
+(new \Eastown\Pagination\RequestPagination(new \App\User()))->request($request)->paginate();
+```
+
+params can be passed by request
+
+* current_page
+* page_size
+* conditions
+* sorts
+* selects
+* groups
+* sum_fields
+
+``http://example.com/?sorts[0][0]=id&sorts[0][1]=desc&sum_fields[0]=id&current_page=1&page_size=2&conditions[0][0]=name&conditions[0][1]=LIKE&conditions[0][2]=%3%``
+
+```json
+{
+"data": [
+        {
+            "id": 3,
+            "name": "123"
+        },
+        {
+            "id": 2,
+            "name": "223"
+        }
+    ],
+    "total": 3,
+    "page_size": 2,
+    "current_page": 1,
+    "request": {
+        "conditions": [
+            [
+              "name", "LIKE", "%3%"
+            ]
+        ],
+        "sorts": [
+            [
+              "id", "desc"
+            ]
+        ],
+        "sum_fields": [
+          "id"
+        ],
+        "page_size": "2",
+        "current_page": "1"
+    },
+    "sum": {
+      "id": 6
+    }
+}
+```
+
+
+>> You can extend Pagination to make your own RequestPagination to handle request by the way you like
