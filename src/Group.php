@@ -32,7 +32,6 @@ class Group implements QueryBuilder
 
     public function build(&$builder)
     {
-        $this->verifyRawSql($this->field);
-        $builder = $builder->groupBy(DB::raw($this->field));
+        $builder = $builder->groupBy($this->raw($this->field));
     }
 }

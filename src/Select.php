@@ -19,16 +19,15 @@ class Select implements QueryBuilder
 
     private $asField;
 
-    public function __construct(string $field, string $asField)
+    public function __construct(string $field, string $asField = null)
     {
         $this->field = $field;
-        $this->asField = $asField;
+        $this->asField = $asField? : $field;
     }
 
     public function build(&$builder)
     {
         $raw = "{$this->field} as {$this->asField}";
-        $this->verifyRawSql($raw);
-        $builder = $builder->addSelect(DB::raw($raw));
+        $builder = $builder->addSelect($this->raw($raw));
     }
 }

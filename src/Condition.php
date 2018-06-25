@@ -17,6 +17,19 @@ class Condition implements QueryBuilder
 
     private $value;
 
+    private $regularOperatorMaps = [
+        Operator::EQ => '=',
+        Operator::GT => '>',
+        Operator::GTE => '>=',
+        Operator::LTE => '<=',
+        Operator::LT => '<',
+        Operator::NE => '<>',
+        Operator::BETWEEN => 'BETWEEN',
+        Operator::LIKE => 'LIKE',
+        Operator::NOT_LIKE => 'NOT LIKE',
+        Operator::REGEXP => 'REGEXP'
+    ];
+
     public function __construct(string $field, string $operator, $value)
     {
         $this->field = $field;
@@ -28,8 +41,9 @@ class Condition implements QueryBuilder
     {
         if ($this->operator == Operator::HAS) {
             $builder = $builder->whereHas($this->field, function ($query) {
-                $conditions = is_array($this->value)? $this->value: [$this->value];
-                foreach($conditions as $condition) {
+                $conditions = is_array($this->value) ? $this->value : [$this->value];
+                foreach ($conditions as $condition) {
+                    is_array($condition) and $condition = new static(...$condition);
                     $condition->build($query);
                 }
             });
@@ -38,8 +52,8 @@ class Condition implements QueryBuilder
 
         if ($this->operator == Operator::DOES_NOT_HAVE) {
             $builder = $builder->whereDoesntHave($this->field, function ($query) {
-                $conditions = is_array($this->value)? $this->value: [$this->value];
-                foreach($conditions as $condition) {
+                $conditions = is_array($this->value) ? $this->value : [$this->value];
+                foreach ($conditions as $condition) {
                     $condition->build($query);
                 }
             });
@@ -56,7 +70,21 @@ class Condition implements QueryBuilder
             return;
         }
 
-        $builder = $builder->where($this->field, $this->operator, $this->value);
+        if ($this->operator == Operator::BETWEEN) {
+            $builder = $builder->whereBetween($this->field, (array)$this->value);
+            return;
+        }
+
+        if ($this->operator == Operator::NOT_BETWEEN) {
+            $builder = $builder->whereNotBetween($this->field, (array)$this->value);
+            return;
+        }
+
+        if(!isset($this->regularOperatorMaps[$this->operator])) {
+            throw new \InvalidArgumentException("Unknown operator {$this->operator}");
+        }
+
+        $builder = $builder->where($this->field, $this->regularOperatorMaps[$this->operator], $this->value);
         return;
     }
 

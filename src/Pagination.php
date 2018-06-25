@@ -1,10 +1,10 @@
 <?php namespace Eastown\Pagination;
 
 
-use Illuminate\Support\Facades\DB;
-
 class Pagination
 {
+    use RawVerify;
+
     private $currentPage = 1;
 
     private $pageSize = 20;
@@ -19,6 +19,19 @@ class Pagination
     {
         $this->builder = $builder;
         $this->originalBuilder = clone $this->builder;
+    }
+
+
+    public function reset()
+    {
+        $this->builder = clone $this->originalBuilder;
+        $this->groupCountBuilder = null;
+        return $this;
+    }
+
+    public function getBuilder()
+    {
+        return $this->builder;
     }
 
     /**
@@ -44,6 +57,7 @@ class Pagination
     public function conditions(array $conditions)
     {
         foreach ($conditions as $condition) {
+            is_array($condition) and $condition = new Condition(...$condition);
             $condition->build($this->builder);
         }
         return $this;
@@ -52,6 +66,7 @@ class Pagination
     public function sorts(array $sorts)
     {
         foreach ($sorts as $sort) {
+            is_array($sort) and $sort = new Sort(...$sort);
             $sort->build($this->builder);
         }
         return $this;
@@ -60,6 +75,8 @@ class Pagination
     public function selects(array $selects)
     {
         foreach ($selects as $select) {
+            is_array($select) and $select = new Select(...$select);
+            is_string($select) and $select = new Select(...[$select]);
             $select->build($this->builder);
         }
         return $this;
@@ -67,10 +84,12 @@ class Pagination
 
     public function groups(array $groups)
     {
-        $this->makeGroupCountBuilder($groups);
-        foreach ($groups as $group) {
+        foreach ($groups as &$group) {
+            is_array($group) and $group = new Group(...$group);
+            is_string($group) and $group = new Group(...[$group]);
             $group->build($this->builder);
         }
+        $this->makeGroupCountBuilder($groups);
         return $this;
     }
 
@@ -79,12 +98,12 @@ class Pagination
         $groups = join(',', array_map(function(Group $group){
             return $group->getField();
         }, $groups));
-        $this->groupCountBuilder = (clone $this->originalBuilder)->select(DB::raw("COUNT(DISTINCT {$groups}) as total"));
+        $this->groupCountBuilder = (clone $this->originalBuilder)->select($this->raw("COUNT(DISTINCT {$groups}) as total"));
     }
 
     public function sum(array $fields)
     {
-        $raw = DB::raw(join(',', array_map(function($field){
+        $raw = $this->raw(join(',', array_map(function($field){
             return "SUM({$field}) AS {$field}";
         }, $fields)));
         return (clone $this->builder)->select($raw)->first();

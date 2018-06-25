@@ -11,8 +11,6 @@ namespace Eastown\Pagination;
 
 class Sort implements QueryBuilder
 {
-    use RawVerify;
-
     const SORT_ASC = 'ASC';
 
     const SORT_DESC = 'DESC';
@@ -29,8 +27,6 @@ class Sort implements QueryBuilder
 
     public function build(&$builder)
     {
-        $raw = $this->field . ' '. $this->direction;
-        $this->verifyRawSql($raw);
-        $builder = $builder->orderByRaw($raw);
+        $builder = $builder->orderBy($this->field, $this->direction);
     }
 }

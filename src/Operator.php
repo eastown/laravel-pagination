@@ -12,20 +12,22 @@ namespace Eastown\Pagination;
 class Operator
 {
     // Raw operator
-    const EQUAL = '=';
-    const GT = '>';
-    const GTE = '>=';
-    const LTE = '<=';
-    const LT ='<';
-    const NE ='<>';
-    const BETWEEN = 'BETWEEN';
+    const EQ = 'EQ';
+    const GT = 'GT';
+    const GTE = 'GTE';
+    const LTE = 'LTE';
+    const LT ='LT';
+    const NE ='NE';
     const LIKE = 'LIKE';
-    const NOT_LIKE = 'NOT LIKE';
+    const NOT_LIKE = 'NOT_LIKE';
     const REGEXP = 'REGEXP';
 
 
     const IN = 'IN';
-    const NOT_IN = 'NOT IN';
+    const NOT_IN = 'NOT_IN';
+    const BETWEEN = 'BETWEEN';
+    const NOT_BETWEEN = 'NOT_BETWEEN';
     const HAS = 'HAS';
-    const DOES_NOT_HAVE = 'DOES NOT HAVE';
+    const DOES_NOT_HAVE = 'DOES_NOT_HAVE';
+
 }

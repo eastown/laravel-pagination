@@ -9,6 +9,8 @@
 namespace Eastown\Pagination;
 
 
+use Illuminate\Support\Facades\DB;
+
 trait RawVerify
 {
     public function verifyRawSql($rawSql)
@@ -28,5 +30,11 @@ trait RawVerify
                 throw new \InvalidArgumentException('Illegal select');
             }
         }
+    }
+
+    public function raw($sql)
+    {
+        $this->verifyRawSql($sql);
+        return DB::raw($sql);
     }
 }
