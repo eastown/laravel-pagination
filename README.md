@@ -4,7 +4,7 @@ Pagination for laravel
 ## Installation
 
 ```shell
-composer require eastown/laravel-pagination dev-master
+composer require eastown/laravel-pagination
 ```
 
 ## Example Models
