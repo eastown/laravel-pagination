@@ -29,5 +29,7 @@ class Operator
     const NOT_BETWEEN = 'NOT_BETWEEN';
     const HAS = 'HAS';
     const DOES_NOT_HAVE = 'DOES_NOT_HAVE';
+    const SCOPE = 'SCOPE';
+    const BOTH = 'BOTH';
 
 }

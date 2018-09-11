@@ -80,6 +80,21 @@ class Condition implements QueryBuilder
             return;
         }
 
+        if($this->operator == Operator::SCOPE) {
+            $builder = $builder->{$this->field}($this->value);
+            return;
+        }
+
+        if($this->operator == Operator::BOTH) {
+            $builder = $builder->where(function ($query) {
+                $conditions = is_array($this->value) ? $this->value : [$this->value];
+                foreach ($conditions as $condition) {
+                    $condition->build($query);
+                }
+            });
+            return;
+        }
+
         if(!isset($this->regularOperatorMaps[$this->operator])) {
             throw new \InvalidArgumentException("Unknown operator {$this->operator}");
         }

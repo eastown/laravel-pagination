@@ -184,6 +184,12 @@ params can be passed by request
 * sum_fields
 
 ``http://example.com/?sorts[0][0]=id&sorts[0][1]=desc&sum_fields[0]=id&current_page=1&page_size=2&conditions[0][0]=name&conditions[0][1]=LIKE&conditions[0][2]=%3%``
+``http://example.com/?sorts=[{"id":"desc"}]&sum_fields=["id"]&current_page=1&page_size=2&conditions=[["name","LIKE","%3%"]]``
+``http://example.com/?sorts=[{"id":"desc"}]&sum_fields=["id"]&current_page=1&page_size=2&conditions={"name__like__":"%3%"}`` 
+
+relationship usage:
+
+``condition={"group.name__like__":"%test%"}``
 
 ```json
 {
