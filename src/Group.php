@@ -9,7 +9,6 @@
 namespace Eastown\Pagination;
 
 
-use Illuminate\Support\Facades\DB;
 
 class Group implements QueryBuilder
 {

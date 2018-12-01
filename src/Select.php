@@ -9,7 +9,6 @@
 namespace Eastown\Pagination;
 
 
-use Illuminate\Support\Facades\DB;
 
 class Select implements QueryBuilder
 {
