@@ -5,15 +5,15 @@ class Pagination
 {
     use RawVerify;
 
-    private $currentPage = 1;
+    protected $currentPage = 1;
 
-    private $pageSize = 20;
+    protected $pageSize = 20;
 
-    private $builder;
+    protected $builder;
 
-    private $groupCountBuilder;
+    protected $groupCountBuilder;
 
-    private $originalBuilder;
+    protected $originalBuilder;
 
     public function __construct($builder)
     {
