@@ -39,7 +39,7 @@ class RequestPagination extends Pagination
         $value = $this->request->input($field);
         if (is_string($value)) {
             $jsonValue = json_decode($value, true);
-            if ($jsonValue) {
+            if (is_array($jsonValue)) {
                 $value = $jsonValue;
                 $this->request->merge([
                     $field => $value
