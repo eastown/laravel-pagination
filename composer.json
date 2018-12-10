@@ -1,6 +1,7 @@
 {
   "name": "eastown/laravel-pagination",
   "description": "Pagination for laravel",
+  "license": "MIT",
   "authors": [
     {
       "name": "Eastown",

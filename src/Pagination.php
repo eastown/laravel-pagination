@@ -65,8 +65,12 @@ class Pagination
 
     public function sorts(array $sorts)
     {
-        foreach ($sorts as $sort) {
-            is_array($sort) and $sort = new Sort(...$sort);
+        foreach ($sorts as $key => $sort) {
+            if(is_numeric($key)) {
+                is_array($sort) and $sort = new Sort(...$sort);
+            }else {
+                $sort = new Sort($key, $sort);
+            }
             $sort->build($this->builder);
         }
         return $this;
