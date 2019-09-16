@@ -9,6 +9,8 @@
 namespace Eastown\Pagination;
 
 
+use Illuminate\Support\Arr;
+
 class FlatConditionAdapter
 {
     private $suffixMap = [
@@ -55,7 +57,7 @@ class FlatConditionAdapter
     private function processSuffix()
     {
         $result = preg_match_all('/(__\w+__)/i', $this->field, $matches);
-        $this->operator = $result ? array_get($this->suffixMap, end($matches[1]), Operator::EQ) : Operator::EQ;
+        $this->operator = $result ? Arr::get($this->suffixMap, end($matches[1]), Operator::EQ) : Operator::EQ;
     }
 
 

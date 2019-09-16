@@ -1,6 +1,8 @@
 <?php namespace Eastown\Pagination;
 
 
+use Illuminate\Support\Arr;
+
 class Pagination
 {
     use RawVerify;
@@ -113,7 +115,7 @@ class Pagination
         $raw = $this->raw(join(',', array_map(function($field){
             return "SUM({$field}) AS {$field}";
         }, $fields)));
-        return array_only((clone $this->builder)->select($raw)->first()->toArray(), $fields);
+        return Arr::only((clone $this->builder)->select($raw)->first()->toArray(), $fields);
     }
 
     public function query()
