@@ -192,7 +192,7 @@ params can be passed by request
 
 relationship usage:
 
-``condition={"group.name__like__":"%test%"}``
+``conditions={"group.name__like__":"%test%"}``
 
 ```json
 {
