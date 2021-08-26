@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: qi
- * Date: 2018/6/25
- * Time: 14:02
- */
 
 namespace Eastown\Pagination;
 
@@ -18,7 +12,7 @@ class RequestPagination extends Pagination
     public function request(Request $request)
     {
         $this->request = $request;
-        return $this->conditions($this->adaptFlatConditions($this->parseInput('conditions', [])))
+        return $this->conditions(static::adaptFlatConditions($this->parseInput('conditions', [])))
             ->selects($this->parseInput('selects', []))
             ->groups($this->parseInput('groups', []))
             ->sorts($this->parseInput('sorts', []))
@@ -49,7 +43,7 @@ class RequestPagination extends Pagination
         return $value ?: $default;
     }
 
-    private function adaptFlatConditions($conditions)
+    public static function adaptFlatConditions($conditions)
     {
         $newConditions = [];
         foreach ($conditions as $field => $value) {
