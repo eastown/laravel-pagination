@@ -40,6 +40,9 @@ class FlatConditionAdapter
 
     public function adapt()
     {
+        if(is_array($this->value)) {
+            return new Condition($this->field, Operator::HAS, RequestPagination::adaptFlatConditions($this->value));
+        }
         $this->processSuffix();
         $this->processNestedFields();
         $nestedFields = array_reverse($this->nestedFields);
