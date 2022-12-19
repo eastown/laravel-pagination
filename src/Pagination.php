@@ -17,17 +17,20 @@ class Pagination
 
     protected $originalBuilder;
 
+    protected $hasGroups = false;
+
     public function __construct($builder)
     {
         $this->builder = $builder;
         $this->originalBuilder = clone $this->builder;
+        $this->groupCountBuilder = clone $this->builder;
     }
 
 
     public function reset()
     {
         $this->builder = clone $this->originalBuilder;
-        $this->groupCountBuilder = null;
+        $this->groupCountBuilder = clone $this->originalBuilder;
         return $this;
     }
 
@@ -61,6 +64,7 @@ class Pagination
         foreach ($conditions as $condition) {
             is_array($condition) and $condition = new Condition(...$condition);
             $condition->build($this->builder);
+            $condition->build($this->groupCountBuilder);
         }
         return $this;
     }
@@ -95,7 +99,10 @@ class Pagination
             is_string($group) and $group = new Group(...[$group]);
             $group->build($this->builder);
         }
-        $groups and $this->makeGroupCountBuilder($groups);
+        if($groups) {
+            $this->hasGroups = true;
+            $this->makeGroupCountBuilder($groups);
+        }
         return $this;
     }
 
@@ -104,7 +111,7 @@ class Pagination
         $groups = join(',', array_map(function(Group $group){
             return $group->getField();
         }, $groups));
-        $this->groupCountBuilder = (clone $this->originalBuilder)->select($this->raw("COUNT(DISTINCT {$groups}) as total"));
+        $this->groupCountBuilder->select($this->raw("COUNT(DISTINCT {$groups}) as total"));
     }
 
     public function sum(array $fields)
@@ -125,7 +132,7 @@ class Pagination
 
     public function total()
     {
-        return $this->groupCountBuilder? (clone $this->groupCountBuilder)->value('total'): (clone $this->builder)->count();
+        return $this->hasGroups? (clone $this->groupCountBuilder)->value('total'): (clone $this->builder)->count();
     }
 
     public function paginate(callable $mapFunc = null)
