@@ -17,6 +17,8 @@ class Pagination
 
     protected $originalBuilder;
 
+    protected $sumBuilder;
+
     protected $hasGroups = false;
 
     public function __construct($builder)
@@ -24,6 +26,7 @@ class Pagination
         $this->builder = $builder;
         $this->originalBuilder = clone $this->builder;
         $this->groupCountBuilder = clone $this->builder;
+        $this->sumBuilder = clone $this->builder;
     }
 
 
@@ -31,6 +34,7 @@ class Pagination
     {
         $this->builder = clone $this->originalBuilder;
         $this->groupCountBuilder = clone $this->originalBuilder;
+        $this->sumBuilder = clone $this->originalBuilder;
         return $this;
     }
 
@@ -65,6 +69,7 @@ class Pagination
             is_array($condition) and $condition = new Condition(...$condition);
             $condition->build($this->builder);
             $condition->build($this->groupCountBuilder);
+            $condition->build($this->sumBuilder);
         }
         return $this;
     }
@@ -122,7 +127,7 @@ class Pagination
         $raw = $this->raw(join(',', array_map(function($field){
             return "SUM({$field}) AS {$field}";
         }, $fields)));
-        return Arr::only((clone $this->builder)->select($raw)->first()->toArray(), $fields);
+        return Arr::only((clone $this->sumBuilder)->select($raw)->first()->toArray(), $fields);
     }
 
     public function query()
