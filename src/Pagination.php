@@ -127,7 +127,7 @@ class Pagination
         $raw = $this->raw(join(',', array_map(function($field){
             return "SUM({$field}) AS {$field}";
         }, $fields)));
-        return Arr::only((clone $this->sumBuilder)->select($raw)->first()->toArray(), $fields);
+        return array_map('floatval', Arr::only((clone $this->sumBuilder)->select($raw)->first()->toArray(), $fields));
     }
 
     public function query()
