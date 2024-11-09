@@ -54,6 +54,7 @@ class Condition implements QueryBuilder
             $builder = $builder->whereDoesntHave($this->field, function ($query) {
                 $conditions = is_array($this->value) ? $this->value : [$this->value];
                 foreach ($conditions as $condition) {
+                    is_array($condition) and $condition = new static(...$condition);
                     $condition->build($query);
                 }
             });
